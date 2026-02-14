@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, Heart, GraduationCap, Briefcase, Brain } from 'lucide-react';
+
+const INTERVAL_MS = 5000;
 
 const sectors = [
   {
@@ -82,8 +84,12 @@ const sectors = [
 
 export default function SectorPrism() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [displayIndex, setDisplayIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -102,7 +108,61 @@ export default function SectorPrism() {
     return () => observer.disconnect();
   }, []);
 
-  const activeSector = sectors[activeIndex];
+  const goTo = useCallback((index: number) => {
+    if (index === displayIndex) return;
+    setIsTransitioning(true);
+    setActiveIndex(index);
+
+    // After fade-out completes, swap content and fade back in
+    setTimeout(() => {
+      setDisplayIndex(index);
+      setIsTransitioning(false);
+    }, 400);
+  }, [displayIndex]);
+
+  // Auto-rotation
+  useEffect(() => {
+    if (!isVisible || isPaused) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
+      const next = (activeIndex + 1) % sectors.length;
+      goTo(next);
+    }, INTERVAL_MS);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isVisible, isPaused, activeIndex, goTo]);
+
+  const handleManualSelect = (index: number) => {
+    // Reset timer on manual interaction
+    if (timerRef.current) clearInterval(timerRef.current);
+    goTo(index);
+  };
+
+  const displayedSector = sectors[displayIndex];
+
+  // Progress percentage for the active sector timer bar
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    if (!isVisible || isPaused) {
+      setProgress(0);
+      return;
+    }
+    setProgress(0);
+    const start = Date.now();
+    const frame = () => {
+      const elapsed = Date.now() - start;
+      const pct = Math.min((elapsed / INTERVAL_MS) * 100, 100);
+      setProgress(pct);
+      if (pct < 100) rafRef.current = requestAnimationFrame(frame);
+    };
+    const rafRef = { current: requestAnimationFrame(frame) };
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [activeIndex, isVisible, isPaused]);
 
   return (
     <section
@@ -147,13 +207,20 @@ export default function SectorPrism() {
             {sectors.map((sector, index) => (
               <button
                 key={sector.id}
-                onClick={() => setActiveIndex(index)}
-                className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 group ${
+                onClick={() => handleManualSelect(index)}
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+                className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 group relative overflow-hidden ${
                   activeIndex === index
                     ? 'bg-primary/10 border-primary/30'
                     : 'bg-card/50 border-border/30 hover:border-primary/20 hover:bg-card'
                 }`}
               >
+                {/* Timer progress bar on active item */}
+                {activeIndex === index && (
+                  <div className="absolute bottom-0 left-0 h-[2px] bg-primary/40 transition-none" style={{ width: `${progress}%` }} />
+                )}
+
                 <div className="flex items-center gap-4">
                   <div
                     className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
@@ -194,11 +261,13 @@ export default function SectorPrism() {
             ))}
           </div>
 
-          {/* Right - Active sector display */}
+          {/* Right - Active sector display with crossfade */}
           <div
             className={`relative transition-all duration-700 delay-400 ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
             }`}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
           >
             <div className="relative">
               {/* Glow */}
@@ -206,41 +275,57 @@ export default function SectorPrism() {
 
               {/* Card */}
               <div className="relative bg-card/80 backdrop-blur-xl border border-border/50 rounded-3xl overflow-hidden shadow-card">
-                {/* Image */}
+                {/* Image with crossfade */}
                 <div className="relative h-56 lg:h-64 overflow-hidden">
-                  <img
-                    src={activeSector.image}
-                    alt={activeSector.title}
-                    width={640}
-                    height={256}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
+                  {/* All images stacked, only active one visible */}
+                  {sectors.map((sector, idx) => (
+                    <img
+                      key={sector.id}
+                      src={sector.image}
+                      alt={sector.title}
+                      width={640}
+                      height={256}
+                      loading={idx === 0 ? 'eager' : 'lazy'}
+                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                        idx === displayIndex && !isTransitioning
+                          ? 'opacity-100'
+                          : 'opacity-0'
+                      }`}
+                    />
+                  ))}
                   <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
-                  
+
                   {/* Overlay content */}
-                  <div className="absolute bottom-4 left-6 right-6">
+                  <div
+                    className={`absolute bottom-4 left-6 right-6 transition-all duration-400 ${
+                      isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
+                    }`}
+                  >
                     <div className="flex items-center gap-2 mb-2">
-                      <activeSector.icon size={18} className="text-primary" />
+                      <displayedSector.icon size={18} className="text-primary" />
                       <span className="mono text-[10px] uppercase tracking-[0.15em] text-primary">
-                        {activeSector.caption}
+                        {displayedSector.caption}
                       </span>
                     </div>
                     <h3 className="font-sans text-2xl lg:text-3xl font-bold text-foreground">
-                      {activeSector.headline}
+                      {displayedSector.headline}
                     </h3>
                   </div>
                 </div>
 
-                {/* Content */}
-                <div className="p-6">
+                {/* Content with crossfade */}
+                <div
+                  className={`p-6 transition-all duration-400 ${
+                    isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
+                  }`}
+                >
                   <p className="text-muted-foreground mb-6 leading-relaxed">
-                    {activeSector.description}
+                    {displayedSector.description}
                   </p>
 
                   {/* Features grid */}
                   <div className="grid grid-cols-2 gap-3 mb-6">
-                    {activeSector.features.map((feature, i) => (
+                    {displayedSector.features.map((feature, i) => (
                       <div
                         key={i}
                         className="flex items-center gap-2 text-sm text-muted-foreground"
@@ -253,7 +338,7 @@ export default function SectorPrism() {
 
                   {/* CTA */}
                   <button className="btn-primary inline-flex items-center gap-2 group w-full justify-center">
-                    {activeSector.cta}
+                    {displayedSector.cta}
                     <ArrowRight
                       size={18}
                       className="transition-transform group-hover:translate-x-1"
