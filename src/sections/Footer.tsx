@@ -129,9 +129,6 @@ export default function Footer() {
             © {new Date().getFullYear()} Locus Analytics. All rights reserved.
           </div>
           <div className="flex items-center gap-6">
-            <span className="text-xs text-muted-foreground mono">
-              Built with React + Tailwind
-            </span>
             <span className="text-xs text-muted-foreground">
               Kampala, Uganda
             </span>
