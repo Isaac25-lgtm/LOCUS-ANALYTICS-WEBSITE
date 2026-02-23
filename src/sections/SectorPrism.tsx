@@ -326,7 +326,7 @@ export default function SectorPrism() {
           {[
             { value: '50+', label: 'Projects Delivered' },
             { value: '20+', label: 'Active Clients' },
-            { value: '5+', label: 'Years Experience' },
+            { value: '8+', label: 'Years in Operation' },
             { value: '99%', label: 'Client Satisfaction' },
           ].map((stat) => (
             <div

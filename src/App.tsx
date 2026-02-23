@@ -5,7 +5,6 @@ import IntelligentSystems from './sections/IntelligentSystems';
 import SectorPrism from './sections/SectorPrism';
 import Capabilities from './sections/Capabilities';
 import Principles from './sections/Principles';
-import Proof from './sections/Proof';
 import Contact from './sections/Contact';
 import Footer from './sections/Footer';
 import { initAnalytics } from './lib/analytics';
@@ -68,7 +67,6 @@ function App() {
         <SectorPrism />
         <Capabilities />
         <Principles />
-        <Proof />
         <Contact />
       </main>
 

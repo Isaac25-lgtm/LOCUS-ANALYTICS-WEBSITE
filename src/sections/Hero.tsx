@@ -123,6 +123,11 @@ export default function Hero() {
                 <span className="text-foreground/90 font-medium">50+</span>{' '}
                 projects delivered
               </div>
+              <div className="w-px h-4 self-center" style={{ background: 'hsl(222 12% 20%)' }} />
+              <div className="text-[13px]" style={{ color: 'hsl(215 10% 48%)' }}>
+                <span className="text-foreground/90 font-medium">8 years</span>{' '}
+                in operation
+              </div>
             </div>
           </div>
 
