@@ -39,13 +39,16 @@ export default function Navigation({ scrolled }: NavigationProps) {
             {/* Logo */}
             <a
               href="#"
-              className="font-sans text-xl lg:text-2xl font-bold text-foreground tracking-tight"
+              className="flex items-center gap-2"
               onClick={(e) => {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             >
-              Locus
+              <img src="/logo.png" alt="Locus Analytics logo" className="h-8 w-auto" />
+              <span className="font-sans text-xl lg:text-2xl font-bold text-foreground tracking-tight">
+                Locus Analytics
+              </span>
             </a>
 
             {/* Desktop Navigation */}
