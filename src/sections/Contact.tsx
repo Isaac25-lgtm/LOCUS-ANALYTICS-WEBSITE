@@ -192,10 +192,10 @@ export default function Contact() {
                 <div>
                   <div className="text-sm text-muted-foreground">Phone / WhatsApp</div>
                   <a
-                    href="tel:+256700000000"
+                    href="tel:+256755244837"
                     className="text-foreground hover:text-primary transition-colors"
                   >
-                    +256 700 000 000
+                    +256 755 244 837
                   </a>
                 </div>
               </div>
