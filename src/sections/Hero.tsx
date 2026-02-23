@@ -1,13 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, TrendingUp, Globe, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowRight, TrendingUp, Globe, Zap, Activity } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    // Trigger entrance animation on mount
     const timer = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
@@ -21,49 +19,57 @@ export default function Hero() {
 
   return (
     <section
-      ref={sectionRef}
       className="relative min-h-screen w-full flex items-center overflow-hidden"
       style={{
-        background: 'radial-gradient(ellipse at 30% 20%, rgba(47, 107, 255, 0.08) 0%, transparent 50%)',
+        background: `
+          radial-gradient(ellipse at 20% 20%, rgba(47, 100, 230, 0.06) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 80%, rgba(47, 100, 230, 0.03) 0%, transparent 40%)
+        `,
       }}
     >
-      {/* Background grid pattern */}
+      {/* Subtle grid pattern */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.025]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)
           `,
-          backgroundSize: '60px 60px',
+          backgroundSize: '72px 72px',
         }}
       />
 
-      <div className="w-full px-6 lg:px-12 xl:px-20 pt-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[calc(100vh-5rem)]">
-          {/* Left content */}
+      <div className="w-full px-6 lg:px-12 xl:px-20 pt-24 lg:pt-20">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-12 items-center min-h-[calc(100vh-5rem)]">
+          {/* ========================
+              LEFT — HERO CONTENT
+              ======================== */}
           <div
-            className={`max-w-2xl transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
+            className={`max-w-xl transition-all duration-700 ease-out ${
+              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
             }`}
           >
-            {/* Micro label */}
-            <div className="mono text-xs uppercase tracking-[0.15em] text-primary mb-6">
+            {/* Eyebrow */}
+            <div
+              className="mono text-[11px] uppercase tracking-[0.18em] mb-6"
+              style={{ color: 'hsl(215 40% 55%)' }}
+            >
               Operational Systems & Data Infrastructure
             </div>
 
-            {/* Main headline */}
-            <h1 className="font-sans text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-foreground leading-[0.95] tracking-tight mb-6">
+            {/* Headline */}
+            <h1 className="font-sans text-[3.25rem] sm:text-[3.75rem] lg:text-[4.5rem] xl:text-[5.25rem] font-semibold text-foreground leading-[0.92] tracking-[-0.025em] mb-5">
               Locus
               <br />
               <span className="text-gradient">Analytics</span>
             </h1>
 
-            {/* Subheadline */}
+            {/* Supporting text */}
             <p
-              className={`text-lg lg:text-xl text-muted-foreground leading-relaxed mb-8 max-w-lg transition-all duration-700 delay-200 ${
+              className={`text-[16px] lg:text-[17px] leading-[1.65] mb-8 max-w-md transition-all duration-700 delay-200 ease-out ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
+              style={{ color: 'hsl(215 10% 55%)' }}
             >
               Intelligent systems for healthcare, education, and business.
               Built for Uganda. Ready for scale.
@@ -71,7 +77,7 @@ export default function Hero() {
 
             {/* CTAs */}
             <div
-              className={`flex flex-wrap gap-4 transition-all duration-700 delay-300 ${
+              className={`flex flex-wrap gap-3 transition-all duration-700 delay-300 ease-out ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
@@ -81,8 +87,9 @@ export default function Hero() {
               >
                 Explore systems
                 <ArrowRight
-                  size={18}
-                  className="transition-transform group-hover:translate-x-1"
+                  size={15}
+                  strokeWidth={2}
+                  className="transition-transform duration-200 group-hover:translate-x-0.5"
                 />
               </button>
               <button
@@ -95,7 +102,7 @@ export default function Hero() {
 
             {/* Trust indicators */}
             <div
-              className={`flex items-center gap-6 mt-12 transition-all duration-700 delay-500 ${
+              className={`flex items-center gap-5 mt-12 transition-all duration-700 delay-500 ease-out ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
@@ -103,161 +110,236 @@ export default function Hero() {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/40 to-primary/20 border-2 border-background flex items-center justify-center"
+                    className="w-7 h-7 rounded-full border border-background flex items-center justify-center"
+                    style={{
+                      background: `linear-gradient(135deg, hsl(222 30% 18%) 0%, hsl(222 30% 14%) 100%)`,
+                    }}
                   >
-                    <span className="text-xs font-medium">
+                    <span className="text-[10px] font-medium text-foreground/60">
                       {String.fromCharCode(64 + i)}
                     </span>
                   </div>
                 ))}
               </div>
-              <div className="text-sm text-muted-foreground">
-                <span className="text-foreground font-semibold">50+</span> projects delivered
+              <div className="text-[13px]" style={{ color: 'hsl(215 10% 48%)' }}>
+                <span className="text-foreground/90 font-medium">50+</span>{' '}
+                projects delivered
               </div>
             </div>
           </div>
 
-          {/* Right content - Hero Card */}
+          {/* ========================
+              RIGHT — PLATFORM SNAPSHOT
+              ======================== */}
           <div
-            className={`relative transition-all duration-1000 delay-200 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
+            className={`relative transition-all duration-900 delay-200 ease-out ${
+              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
             }`}
           >
             <div className="relative">
-              {/* Glow effect behind card */}
-              <div className="absolute -inset-4 bg-primary/10 rounded-[2rem] blur-3xl" />
+              {/* Soft ambient glow — restrained */}
+              <div
+                className="absolute -inset-8 rounded-[2rem] blur-[80px] opacity-40"
+                style={{ background: 'radial-gradient(ellipse, rgba(47, 100, 230, 0.12) 0%, transparent 70%)' }}
+              />
 
               {/* Main card */}
-              <div className="relative bg-card/80 backdrop-blur-xl border border-border/50 rounded-3xl p-6 lg:p-8 shadow-card">
+              <div
+                className="relative rounded-2xl p-6 lg:p-7"
+                style={{
+                  background: 'linear-gradient(180deg, hsl(222 16% 9%) 0%, hsl(222 16% 7.5%) 100%)',
+                  border: '1px solid hsl(222 12% 15%)',
+                  boxShadow: '0 1px 0 0 hsl(222 16% 12%) inset, 0 24px 48px -12px rgba(0, 0, 0, 0.4)',
+                }}
+              >
                 {/* Card header */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-5">
                   <div>
-                    <div className="mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground mb-1">
+                    <div
+                      className="mono text-[10px] uppercase tracking-[0.16em] mb-1"
+                      style={{ color: 'hsl(215 10% 42%)' }}
+                    >
                       System Overview
                     </div>
-                    <div className="font-sans text-lg font-semibold">
+                    <div className="font-sans text-[15px] font-semibold text-foreground/90 tracking-[-0.01em]">
                       Platform Snapshot
                     </div>
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <TrendingUp size={20} className="text-primary" />
-                  </div>
+                  <button
+                    className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-200 hover:bg-white/[0.04]"
+                    style={{
+                      background: 'hsl(222 14% 11%)',
+                      border: '1px solid hsl(222 12% 16%)',
+                    }}
+                  >
+                    <Activity size={14} strokeWidth={1.8} style={{ color: 'hsl(222 60% 60%)' }} />
+                  </button>
                 </div>
 
                 {/* Stats grid */}
-                <div className="grid grid-cols-3 gap-4 mb-8">
-                  <div className="bg-secondary/50 rounded-2xl p-4 text-center">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center mx-auto mb-2">
-                      <Zap size={16} className="text-emerald-400" />
-                    </div>
-                    <div className="font-sans text-2xl font-bold text-foreground">
-                      99.99%
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">Uptime</div>
-                  </div>
-                  <div className="bg-secondary/50 rounded-2xl p-4 text-center">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-2">
-                      <TrendingUp size={16} className="text-primary" />
-                    </div>
-                    <div className="font-sans text-2xl font-bold text-foreground">
-                      &lt;120ms
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">Latency</div>
-                  </div>
-                  <div className="bg-secondary/50 rounded-2xl p-4 text-center">
-                    <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center mx-auto mb-2">
-                      <Globe size={16} className="text-purple-400" />
-                    </div>
-                    <div className="font-sans text-2xl font-bold text-foreground">
-                      6
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">Regions</div>
-                  </div>
+                <div className="grid grid-cols-3 gap-3 mb-5">
+                  {/* Uptime */}
+                  <MetricCard
+                    icon={<Zap size={13} strokeWidth={2} />}
+                    iconColor="hsl(160 50% 50%)"
+                    iconBg="hsl(160 40% 14%)"
+                    value="99.99%"
+                    label="Uptime"
+                  />
+                  {/* Latency */}
+                  <MetricCard
+                    icon={<TrendingUp size={13} strokeWidth={2} />}
+                    iconColor="hsl(222 70% 62%)"
+                    iconBg="hsl(222 40% 14%)"
+                    value="<120ms"
+                    label="Latency"
+                  />
+                  {/* Regions */}
+                  <MetricCard
+                    icon={<Globe size={13} strokeWidth={2} />}
+                    iconColor="hsl(270 45% 60%)"
+                    iconBg="hsl(270 30% 14%)"
+                    value="6"
+                    label="Regions"
+                  />
                 </div>
 
-                {/* Mini chart */}
-                <div className="bg-secondary/30 rounded-2xl p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm font-medium">System Load</span>
-                    <span className="text-xs text-emerald-400 flex items-center gap-1">
-                      <TrendingUp size={12} />
+                {/* Chart card */}
+                <div
+                  className="rounded-xl p-4"
+                  style={{
+                    background: 'hsl(222 14% 8%)',
+                    border: '1px solid hsl(222 12% 13%)',
+                  }}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[13px] font-medium text-foreground/80">System Load</span>
+                    <span
+                      className="text-[11px] font-medium flex items-center gap-1 mono"
+                      style={{ color: 'hsl(160 50% 50%)' }}
+                    >
+                      <TrendingUp size={10} strokeWidth={2.5} />
                       +12.5%
                     </span>
                   </div>
-                  {/* SVG Chart */}
-                  <svg viewBox="0 0 300 80" className="w-full h-16">
-                    {/* Grid lines */}
+                  {/* Premium SVG Chart */}
+                  <svg viewBox="0 0 300 72" className="w-full" style={{ height: '56px' }}>
+                    {/* Subtle grid lines */}
                     {[0, 1, 2, 3].map((i) => (
                       <line
                         key={i}
                         x1="0"
-                        y1={20 * i}
+                        y1={18 * i + 4}
                         x2="300"
-                        y2={20 * i}
-                        stroke="rgba(255,255,255,0.05)"
-                        strokeWidth="1"
+                        y2={18 * i + 4}
+                        stroke="hsl(222 12% 14%)"
+                        strokeWidth="0.5"
                       />
                     ))}
-                    {/* Area gradient */}
+                    {/* Area gradient — subtle */}
                     <defs>
-                      <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#2F6BFF" stopOpacity="0.3" />
-                        <stop offset="100%" stopColor="#2F6BFF" stopOpacity="0" />
+                      <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="hsl(222 70% 55%)" stopOpacity="0.15" />
+                        <stop offset="100%" stopColor="hsl(222 70% 55%)" stopOpacity="0" />
+                      </linearGradient>
+                      <linearGradient id="chartStroke" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="hsl(222 60% 50%)" stopOpacity="0.6" />
+                        <stop offset="50%" stopColor="hsl(222 80% 62%)" stopOpacity="1" />
+                        <stop offset="100%" stopColor="hsl(222 70% 58%)" stopOpacity="0.8" />
                       </linearGradient>
                     </defs>
-                    {/* Area */}
+                    {/* Smooth area fill */}
                     <path
-                      d="M0,60 Q30,50 60,45 T120,35 T180,40 T240,25 T300,20 L300,80 L0,80 Z"
-                      fill="url(#chartGradient)"
+                      d="M0,52 C20,48 40,42 60,38 C80,34 100,30 120,28 C140,26 160,30 180,32 C200,34 220,22 240,18 C260,14 280,14 300,12 L300,72 L0,72 Z"
+                      fill="url(#chartFill)"
                     />
-                    {/* Line */}
+                    {/* Crisp line */}
                     <path
-                      d="M0,60 Q30,50 60,45 T120,35 T180,40 T240,25 T300,20"
+                      d="M0,52 C20,48 40,42 60,38 C80,34 100,30 120,28 C140,26 160,30 180,32 C200,34 220,22 240,18 C260,14 280,14 300,12"
                       fill="none"
-                      stroke="#2F6BFF"
-                      strokeWidth="2"
+                      stroke="url(#chartStroke)"
+                      strokeWidth="1.5"
                       strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
-                    {/* Data points */}
-                    {[
-                      [0, 60],
-                      [60, 45],
-                      [120, 35],
-                      [180, 40],
-                      [240, 25],
-                      [300, 20],
-                    ].map(([x, y], i) => (
-                      <circle
-                        key={i}
-                        cx={x}
-                        cy={y}
-                        r="3"
-                        fill="#2F6BFF"
-                      />
-                    ))}
+                    {/* Endpoint dot only */}
+                    <circle cx="300" cy="12" r="2.5" fill="hsl(222 80% 62%)" />
+                    <circle cx="300" cy="12" r="4" fill="hsl(222 80% 62%)" fillOpacity="0.2" />
                   </svg>
                 </div>
 
-                {/* Bottom status */}
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/50">
+                {/* Footer status */}
+                <div
+                  className="flex items-center justify-between mt-4 pt-3"
+                  style={{ borderTop: '1px solid hsl(222 12% 13%)' }}
+                >
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs text-muted-foreground">All systems operational</span>
+                    <div
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: 'hsl(160 55% 48%)', boxShadow: '0 0 6px hsl(160 55% 48% / 0.4)' }}
+                    />
+                    <span className="text-[11px]" style={{ color: 'hsl(215 10% 42%)' }}>
+                      All systems operational
+                    </span>
                   </div>
-                  <span className="text-xs text-muted-foreground mono">v2.4.1</span>
+                  <span
+                    className="mono text-[10px]"
+                    style={{ color: 'hsl(215 10% 35%)' }}
+                  >
+                    v2.4.1
+                  </span>
                 </div>
               </div>
-
-              {/* Floating elements */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 bg-primary/10 rounded-2xl blur-xl animate-float" />
-              <div className="absolute -bottom-6 -left-6 w-16 h-16 bg-purple-500/10 rounded-full blur-xl animate-float" style={{ animationDelay: '1s' }} />
             </div>
           </div>
         </div>
       </div>
 
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
     </section>
+  );
+}
+
+/* ==============================
+   METRIC CARD SUB-COMPONENT
+   ============================== */
+function MetricCard({
+  icon,
+  iconColor,
+  iconBg,
+  value,
+  label,
+}: {
+  icon: React.ReactNode;
+  iconColor: string;
+  iconBg: string;
+  value: string;
+  label: string;
+}) {
+  return (
+    <div
+      className="rounded-xl p-3.5 text-center"
+      style={{
+        background: 'hsl(222 14% 9.5%)',
+        border: '1px solid hsl(222 12% 13%)',
+      }}
+    >
+      <div
+        className="w-7 h-7 rounded-lg flex items-center justify-center mx-auto mb-2"
+        style={{ background: iconBg, color: iconColor }}
+      >
+        {icon}
+      </div>
+      <div className="font-sans text-xl font-semibold text-foreground/95 tracking-[-0.02em] leading-none">
+        {value}
+      </div>
+      <div
+        className="text-[11px] mt-1.5 tracking-[0.02em]"
+        style={{ color: 'hsl(215 10% 42%)' }}
+      >
+        {label}
+      </div>
+    </div>
   );
 }
