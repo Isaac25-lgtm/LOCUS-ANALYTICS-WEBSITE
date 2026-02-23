@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, TrendingUp, Globe, Zap, Activity } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 
 export default function Hero() {
@@ -24,7 +24,7 @@ export default function Hero() {
         background: `radial-gradient(ellipse at 20% 20%, rgba(47, 100, 230, 0.05) 0%, transparent 50%)`,
       }}
     >
-      {/* Subtle grid pattern — left side only */}
+      {/* Subtle grid pattern */}
       <div
         className="absolute inset-0 opacity-[0.02]"
         style={{
@@ -37,7 +37,7 @@ export default function Hero() {
       />
 
       <div className="w-full px-6 lg:px-12 xl:px-20 pt-24 lg:pt-20">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-12 items-center min-h-[calc(100vh-5rem)]">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-5rem)]">
 
           {/* ========================
               LEFT — HERO CONTENT
@@ -127,175 +127,66 @@ export default function Hero() {
           </div>
 
           {/* ========================
-              RIGHT — PHOTO + CARD OVERLAY
+              RIGHT — FULL HERO PHOTO
               ======================== */}
           <div
             className={`relative transition-all duration-700 delay-200 ease-out ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
             }`}
           >
-            {/* Photo container */}
+            {/* Outer ambient glow — very soft */}
             <div
-              className="relative rounded-2xl overflow-hidden"
+              className="absolute -inset-6 rounded-3xl blur-[60px] opacity-30 pointer-events-none"
+              style={{ background: 'radial-gradient(ellipse, rgba(47,100,230,0.18) 0%, transparent 70%)' }}
+            />
+
+            {/* Photo container — full fill, no overlays */}
+            <div
+              className="relative overflow-hidden"
               style={{
-                height: 'clamp(460px, 55vh, 620px)',
-                boxShadow: '0 32px 64px -16px rgba(0,0,0,0.6)',
+                height: 'clamp(480px, 58vh, 660px)',
+                borderRadius: '20px',
+                border: '1px solid rgba(255,255,255,0.07)',
+                boxShadow: `
+                  0 1px 0 0 rgba(255,255,255,0.06) inset,
+                  0 40px 80px -20px rgba(0,0,0,0.7)
+                `,
               }}
             >
-              {/* Background photo */}
+              {/* The photo — full coverage */}
               <img
                 src="/hero-image.jpg"
-                alt="Locus Analytics — tech professional in data center"
-                className="absolute inset-0 w-full h-full object-cover object-center"
-                style={{ filter: 'brightness(0.82) saturate(0.9)' }}
+                alt="Locus Analytics — technology professionals at work"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  objectPosition: 'center 30%',
+                  filter: 'brightness(0.78) saturate(0.85) contrast(1.05)',
+                }}
                 loading="eager"
+                decoding="async"
               />
 
-              {/* Multi-stop overlay: left edge dark for text, bottom dark for card */}
+              {/* Left edge fade — blends photo into page background */}
               <div
-                className="absolute inset-0"
+                className="absolute inset-y-0 left-0 w-16 pointer-events-none"
                 style={{
-                  background: `
-                    linear-gradient(to right, rgba(10,12,20,0.45) 0%, transparent 60%),
-                    linear-gradient(to top, rgba(10,12,20,0.92) 0%, rgba(10,12,20,0.5) 35%, transparent 65%)
-                  `,
+                  background: 'linear-gradient(to right, hsl(222 16% 4%) 0%, transparent 100%)',
                 }}
               />
 
-              {/* Thin top-edge border highlight */}
+              {/* Bottom edge fade — grounds the image */}
               <div
-                className="absolute top-0 left-0 right-0 h-px"
-                style={{ background: 'linear-gradient(to right, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)' }}
+                className="absolute inset-x-0 bottom-0 h-20 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(to top, hsl(222 16% 4%) 0%, transparent 100%)',
+                }}
               />
 
-              {/* Platform Snapshot card — bottom overlay */}
+              {/* Very subtle overall tint to push photo into the dark theme */}
               <div
-                className="absolute bottom-0 left-0 right-0 p-5"
-              >
-                <div
-                  className="rounded-xl p-4 backdrop-blur-xl"
-                  style={{
-                    background: 'rgba(12, 14, 22, 0.82)',
-                    border: '1px solid rgba(255,255,255,0.07)',
-                    boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset',
-                  }}
-                >
-                  {/* Card header */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <div
-                        className="mono text-[9px] uppercase tracking-[0.16em] mb-0.5"
-                        style={{ color: 'hsl(215 10% 40%)' }}
-                      >
-                        System Overview
-                      </div>
-                      <div className="font-sans text-[13px] font-semibold text-foreground/90 tracking-[-0.01em]">
-                        Platform Snapshot
-                      </div>
-                    </div>
-                    <button
-                      className="w-7 h-7 rounded-lg flex items-center justify-center"
-                      style={{
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                      }}
-                    >
-                      <Activity size={12} strokeWidth={1.8} style={{ color: 'hsl(222 60% 60%)' }} />
-                    </button>
-                  </div>
-
-                  {/* Stats grid */}
-                  <div className="grid grid-cols-3 gap-2.5 mb-3.5">
-                    <MetricCard
-                      icon={<Zap size={11} strokeWidth={2} />}
-                      iconColor="hsl(160 50% 50%)"
-                      iconBg="rgba(40,160,100,0.15)"
-                      value="99.99%"
-                      label="Uptime"
-                    />
-                    <MetricCard
-                      icon={<TrendingUp size={11} strokeWidth={2} />}
-                      iconColor="hsl(222 70% 65%)"
-                      iconBg="rgba(60,100,230,0.15)"
-                      value="<120ms"
-                      label="Latency"
-                    />
-                    <MetricCard
-                      icon={<Globe size={11} strokeWidth={2} />}
-                      iconColor="hsl(270 45% 65%)"
-                      iconBg="rgba(120,80,200,0.15)"
-                      value="6"
-                      label="Regions"
-                    />
-                  </div>
-
-                  {/* Mini chart */}
-                  <div
-                    className="rounded-lg px-3 py-2.5"
-                    style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.05)',
-                    }}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[11px] font-medium text-foreground/75">System Load</span>
-                      <span
-                        className="mono text-[10px] flex items-center gap-1"
-                        style={{ color: 'hsl(160 50% 50%)' }}
-                      >
-                        <TrendingUp size={9} strokeWidth={2.5} />
-                        +12.5%
-                      </span>
-                    </div>
-                    <svg viewBox="0 0 300 48" className="w-full" style={{ height: '36px' }}>
-                      <defs>
-                        <linearGradient id="chartFill2" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="hsl(222 70% 55%)" stopOpacity="0.2" />
-                          <stop offset="100%" stopColor="hsl(222 70% 55%)" stopOpacity="0" />
-                        </linearGradient>
-                        <linearGradient id="chartStroke2" x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0%" stopColor="hsl(222 60% 50%)" stopOpacity="0.5" />
-                          <stop offset="60%" stopColor="hsl(222 80% 65%)" stopOpacity="1" />
-                          <stop offset="100%" stopColor="hsl(222 70% 60%)" stopOpacity="0.9" />
-                        </linearGradient>
-                      </defs>
-                      {[8, 20, 32].map((y, i) => (
-                        <line key={i} x1="0" y1={y} x2="300" y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
-                      ))}
-                      <path
-                        d="M0,36 C20,32 40,28 60,25 C80,22 100,20 120,18 C140,16 160,20 180,21 C200,22 220,14 240,11 C260,8 280,8 300,6 L300,48 L0,48 Z"
-                        fill="url(#chartFill2)"
-                      />
-                      <path
-                        d="M0,36 C20,32 40,28 60,25 C80,22 100,20 120,18 C140,16 160,20 180,21 C200,22 220,14 240,11 C260,8 280,8 300,6"
-                        fill="none"
-                        stroke="url(#chartStroke2)"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                      />
-                      <circle cx="300" cy="6" r="2" fill="hsl(222 80% 65%)" />
-                      <circle cx="300" cy="6" r="3.5" fill="hsl(222 80% 65%)" fillOpacity="0.2" />
-                    </svg>
-                  </div>
-
-                  {/* Status footer */}
-                  <div className="flex items-center justify-between mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                    <div className="flex items-center gap-1.5">
-                      <div
-                        className="w-1.5 h-1.5 rounded-full"
-                        style={{ background: 'hsl(160 55% 48%)', boxShadow: '0 0 5px hsl(160 55% 48% / 0.5)' }}
-                      />
-                      <span className="text-[10px]" style={{ color: 'hsl(215 10% 40%)' }}>All systems operational</span>
-                    </div>
-                    <span className="mono text-[9px]" style={{ color: 'hsl(215 10% 32%)' }}>v2.4.1</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Photo credit — tiny, tasteful */}
-            <div className="absolute -bottom-5 right-0 text-[9px] opacity-30" style={{ color: 'hsl(215 10% 50%)' }}>
-              Photo: Unsplash
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'rgba(15, 20, 40, 0.12)' }}
+              />
             </div>
           </div>
 
@@ -305,48 +196,5 @@ export default function Hero() {
       {/* Bottom gradient fade */}
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
     </section>
-  );
-}
-
-/* ==============================
-   METRIC CARD SUB-COMPONENT
-   ============================== */
-function MetricCard({
-  icon,
-  iconColor,
-  iconBg,
-  value,
-  label,
-}: {
-  icon: React.ReactNode;
-  iconColor: string;
-  iconBg: string;
-  value: string;
-  label: string;
-}) {
-  return (
-    <div
-      className="rounded-lg p-2.5 text-center"
-      style={{
-        background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.06)',
-      }}
-    >
-      <div
-        className="w-6 h-6 rounded-md flex items-center justify-center mx-auto mb-1.5"
-        style={{ background: iconBg, color: iconColor }}
-      >
-        {icon}
-      </div>
-      <div className="font-sans text-[15px] font-semibold text-foreground/90 tracking-[-0.02em] leading-none">
-        {value}
-      </div>
-      <div
-        className="text-[10px] mt-1 tracking-[0.02em]"
-        style={{ color: 'hsl(215 10% 42%)' }}
-      >
-        {label}
-      </div>
-    </div>
   );
 }
