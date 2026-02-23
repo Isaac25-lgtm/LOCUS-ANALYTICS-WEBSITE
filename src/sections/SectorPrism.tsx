@@ -317,31 +317,74 @@ export default function SectorPrism() {
           </div>
         </div>
 
-        {/* ── Stats row (unchanged) ── */}
+        {/* ── Stats row — animated count-up ── */}
         <div
           className={`grid grid-cols-2 lg:grid-cols-4 gap-6 mt-12 transition-all duration-700 delay-400 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
           {[
-            { value: '50+', label: 'Projects Delivered' },
-            { value: '20+', label: 'Active Clients' },
-            { value: '8+', label: 'Years in Operation' },
-            { value: '99%', label: 'Client Satisfaction' },
+            { target: 50, suffix: '+', label: 'Projects Delivered' },
+            { target: 20, suffix: '+', label: 'Active Clients' },
+            { target: 8,  suffix: '+', label: 'Years in Operation' },
+            { target: 99, suffix: '%', label: 'Client Satisfaction' },
           ].map((stat) => (
-            <div
+            <CountStat
               key={stat.label}
-              className="text-center p-6 rounded-2xl bg-card/50 border border-border/30"
-            >
-              <div className="font-sans text-3xl lg:text-4xl font-bold text-foreground mb-1">
-                {stat.value}
-              </div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
-            </div>
+              target={stat.target}
+              suffix={stat.suffix}
+              label={stat.label}
+              run={isVisible}
+            />
           ))}
         </div>
 
       </div>
     </section>
+  );
+}
+
+/* ── Animated count-up stat card ── */
+function CountStat({
+  target,
+  suffix,
+  label,
+  run,
+}: {
+  target: number;
+  suffix: string;
+  label: string;
+  run: boolean;
+}) {
+  const [count, setCount] = useState(0);
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (!run || started.current) return;
+    started.current = true;
+
+    const duration = 900; // ms — fast but readable
+    const steps = 40;
+    const interval = duration / steps;
+    let step = 0;
+
+    const timer = setInterval(() => {
+      step++;
+      // Ease-out: fast start, slows at the end
+      const progress = 1 - Math.pow(1 - step / steps, 3);
+      setCount(Math.round(progress * target));
+      if (step >= steps) clearInterval(timer);
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [run, target]);
+
+  return (
+    <div className="text-center p-6 rounded-2xl bg-card/50 border border-border/30">
+      <div className="font-sans text-3xl lg:text-4xl font-bold text-foreground mb-1 tabular-nums">
+        {count}{suffix}
+      </div>
+      <div className="text-sm text-muted-foreground">{label}</div>
+    </div>
   );
 }
