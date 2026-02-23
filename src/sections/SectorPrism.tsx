@@ -88,23 +88,16 @@ export default function SectorPrism() {
   const [displayIndex, setDisplayIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
+      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
       { threshold: 0.1 }
     );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
@@ -112,76 +105,64 @@ export default function SectorPrism() {
     if (index === displayIndex) return;
     setIsTransitioning(true);
     setActiveIndex(index);
-
-    // After fade-out completes, swap content and fade back in
     setTimeout(() => {
       setDisplayIndex(index);
       setIsTransitioning(false);
     }, 400);
   }, [displayIndex]);
 
-  // Auto-rotation
   useEffect(() => {
     if (!isVisible || isPaused) {
       if (timerRef.current) clearInterval(timerRef.current);
       return;
     }
-
     timerRef.current = setInterval(() => {
       const next = (activeIndex + 1) % sectors.length;
       goTo(next);
     }, INTERVAL_MS);
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [isVisible, isPaused, activeIndex, goTo]);
 
   const handleManualSelect = (index: number) => {
-    // Reset timer on manual interaction
     if (timerRef.current) clearInterval(timerRef.current);
     goTo(index);
   };
 
-  const displayedSector = sectors[displayIndex];
-
-  // Progress percentage for the active sector timer bar
-  const [progress, setProgress] = useState(0);
   useEffect(() => {
-    if (!isVisible || isPaused) {
-      setProgress(0);
-      return;
-    }
+    if (!isVisible || isPaused) { setProgress(0); return; }
     setProgress(0);
     const start = Date.now();
+    const rafRef = { current: 0 };
     const frame = () => {
-      const elapsed = Date.now() - start;
-      const pct = Math.min((elapsed / INTERVAL_MS) * 100, 100);
+      const pct = Math.min(((Date.now() - start) / INTERVAL_MS) * 100, 100);
       setProgress(pct);
       if (pct < 100) rafRef.current = requestAnimationFrame(frame);
     };
-    const rafRef = { current: requestAnimationFrame(frame) };
+    rafRef.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafRef.current);
   }, [activeIndex, isVisible, isPaused]);
+
+  const displayedSector = sectors[displayIndex];
 
   return (
     <section
       id="sectors"
       ref={sectionRef}
-      className="relative min-h-screen w-full py-20"
+      className="relative w-full py-20"
     >
       {/* Background */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-20 pointer-events-none"
         style={{
           background: 'radial-gradient(ellipse at 30% 70%, rgba(47, 107, 255, 0.08) 0%, transparent 50%)',
         }}
       />
 
       <div className="w-full px-6 lg:px-12 xl:px-20">
-        {/* Section header */}
+
+        {/* ── Section header (UNCHANGED) ── */}
         <div
-          className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${
+          className={`text-center max-w-2xl mx-auto mb-12 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
@@ -196,163 +177,149 @@ export default function SectorPrism() {
           </p>
         </div>
 
-        {/* Main content grid */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          {/* Left - Sector selector */}
+        {/* ── Full-width image panel ── */}
+        <div
+          className={`transition-all duration-700 delay-200 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {/* Image container — full width */}
           <div
-            className={`space-y-4 transition-all duration-700 delay-200 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
-            }`}
+            className="relative w-full overflow-hidden rounded-2xl"
+            style={{
+              height: 'clamp(420px, 56vh, 620px)',
+              border: '1px solid rgba(255,255,255,0.07)',
+              boxShadow: '0 1px 0 0 rgba(255,255,255,0.05) inset, 0 32px 64px -16px rgba(0,0,0,0.5)',
+            }}
           >
-            {sectors.map((sector, index) => (
-              <button
+            {/* All sector images stacked — only active fades in */}
+            {sectors.map((sector, idx) => (
+              <img
                 key={sector.id}
-                onClick={() => handleManualSelect(index)}
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
-                className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 group relative overflow-hidden ${
-                  activeIndex === index
-                    ? 'bg-primary/10 border-primary/30'
-                    : 'bg-card/50 border-border/30 hover:border-primary/20 hover:bg-card'
+                src={sector.image}
+                alt={sector.title}
+                width={1280}
+                height={620}
+                loading={idx === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                  idx === displayIndex && !isTransitioning ? 'opacity-100' : 'opacity-0'
                 }`}
-              >
-                {/* Timer progress bar on active item */}
-                {activeIndex === index && (
-                  <div className="absolute bottom-0 left-0 h-[2px] bg-primary/40 transition-none" style={{ width: `${progress}%` }} />
-                )}
-
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
-                      activeIndex === index
-                        ? 'bg-primary/20'
-                        : 'bg-secondary group-hover:bg-primary/10'
-                    }`}
-                  >
-                    <sector.icon
-                      size={22}
-                      className={
-                        activeIndex === index ? 'text-primary' : 'text-muted-foreground'
-                      }
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div
-                      className={`font-sans font-semibold transition-colors ${
-                        activeIndex === index ? 'text-foreground' : 'text-muted-foreground'
-                      }`}
-                    >
-                      {sector.title}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-0.5">
-                      {sector.caption}
-                    </div>
-                  </div>
-                  <ArrowRight
-                    size={18}
-                    className={`transition-all ${
-                      activeIndex === index
-                        ? 'text-primary translate-x-0 opacity-100'
-                        : 'text-muted-foreground -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100'
-                    }`}
-                  />
-                </div>
-              </button>
+                style={{ filter: 'brightness(0.72) saturate(0.88)' }}
+              />
             ))}
-          </div>
 
-          {/* Right - Active sector display with crossfade */}
-          <div
-            className={`relative transition-all duration-700 delay-400 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
-            }`}
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            <div className="relative">
-              {/* Glow */}
-              <div className="absolute -inset-4 bg-primary/5 rounded-[2rem] blur-3xl" />
+            {/* Bottom overlay gradient for text legibility */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'linear-gradient(to top, rgba(10,12,22,0.92) 0%, rgba(10,12,22,0.55) 35%, transparent 65%)',
+              }}
+            />
 
-              {/* Card */}
-              <div className="relative bg-card/80 backdrop-blur-xl border border-border/50 rounded-3xl overflow-hidden shadow-card">
-                {/* Image with crossfade */}
-                <div className="relative h-56 lg:h-64 overflow-hidden">
-                  {/* All images stacked, only active one visible */}
-                  {sectors.map((sector, idx) => (
-                    <img
-                      key={sector.id}
-                      src={sector.image}
-                      alt={sector.title}
-                      width={640}
-                      height={256}
-                      loading={idx === 0 ? 'eager' : 'lazy'}
-                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                        idx === displayIndex && !isTransitioning
-                          ? 'opacity-100'
-                          : 'opacity-0'
-                      }`}
-                    />
-                  ))}
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+            {/* Left edge blend */}
+            <div
+              className="absolute inset-y-0 left-0 w-12 pointer-events-none"
+              style={{ background: 'linear-gradient(to right, rgba(10,12,22,0.3) 0%, transparent 100%)' }}
+            />
 
-                  {/* Overlay content */}
-                  <div
-                    className={`absolute bottom-4 left-6 right-6 transition-all duration-400 ${
-                      isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <displayedSector.icon size={18} className="text-primary" />
-                      <span className="mono text-[10px] uppercase tracking-[0.15em] text-primary">
-                        {displayedSector.caption}
-                      </span>
-                    </div>
-                    <h3 className="font-sans text-2xl lg:text-3xl font-bold text-foreground">
-                      {displayedSector.headline}
-                    </h3>
-                  </div>
-                </div>
+            {/* Overlay content — fades on transition */}
+            <div
+              className={`absolute bottom-0 left-0 right-0 p-8 lg:p-10 transition-all duration-400 ${
+                isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
+              }`}
+            >
+              {/* Caption + icon */}
+              <div className="flex items-center gap-2 mb-3">
+                <displayedSector.icon size={15} className="text-primary" strokeWidth={2} />
+                <span className="mono text-[10px] uppercase tracking-[0.18em] text-primary">
+                  {displayedSector.caption}
+                </span>
+              </div>
 
-                {/* Content with crossfade */}
-                <div
-                  className={`p-6 transition-all duration-400 ${
-                    isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
-                  }`}
-                >
-                  <p className="text-muted-foreground mb-6 leading-relaxed">
+              {/* Headline */}
+              <h3 className="font-sans text-3xl lg:text-4xl font-semibold text-foreground tracking-[-0.02em] leading-tight mb-3">
+                {displayedSector.headline}
+              </h3>
+
+              {/* Description + features + CTA in a two-column row on desktop */}
+              <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-12">
+                <div className="flex-1 max-w-lg">
+                  <p className="text-[14px] leading-relaxed mb-4" style={{ color: 'hsl(215 10% 60%)' }}>
                     {displayedSector.description}
                   </p>
-
-                  {/* Features grid */}
-                  <div className="grid grid-cols-2 gap-3 mb-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1.5">
                     {displayedSector.features.map((feature, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center gap-2 text-sm text-muted-foreground"
-                      >
-                        <div className="w-1 h-1 rounded-full bg-primary" />
+                      <div key={i} className="flex items-center gap-1.5 text-[12px]" style={{ color: 'hsl(215 10% 55%)' }}>
+                        <div className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: 'hsl(222 70% 60%)' }} />
                         {feature}
                       </div>
                     ))}
                   </div>
+                </div>
 
-                  {/* CTA */}
-                  <button className="btn-primary inline-flex items-center gap-2 group w-full justify-center">
+                <div className="lg:flex-shrink-0">
+                  <button className="btn-primary inline-flex items-center gap-2 group whitespace-nowrap">
                     {displayedSector.cta}
                     <ArrowRight
-                      size={18}
-                      className="transition-transform group-hover:translate-x-1"
+                      size={14}
+                      strokeWidth={2}
+                      className="transition-transform duration-200 group-hover:translate-x-0.5"
                     />
                   </button>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* ── Sector tab selector — below image ── */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+            {sectors.map((sector, index) => (
+              <button
+                key={sector.id}
+                onClick={() => handleManualSelect(index)}
+                className={`relative overflow-hidden flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-all duration-200 ${
+                  activeIndex === index
+                    ? 'border-primary/30 bg-primary/8'
+                    : 'border-border/30 bg-card/40 hover:bg-card/70 hover:border-border/50'
+                }`}
+                style={activeIndex === index ? { background: 'rgba(47,100,230,0.07)' } : undefined}
+              >
+                {/* Timer progress bar */}
+                {activeIndex === index && (
+                  <div
+                    className="absolute bottom-0 left-0 h-[2px] bg-primary/50 transition-none"
+                    style={{ width: `${progress}%` }}
+                  />
+                )}
+                <div
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                    activeIndex === index ? 'bg-primary/20' : 'bg-secondary'
+                  }`}
+                >
+                  <sector.icon
+                    size={16}
+                    className={activeIndex === index ? 'text-primary' : 'text-muted-foreground'}
+                  />
+                </div>
+                <div>
+                  <div className={`text-[13px] font-medium leading-tight ${activeIndex === index ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    {sector.title}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground/70 mt-0.5 hidden sm:block truncate">
+                    {sector.caption.split(' • ')[0]}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Stats row */}
+        {/* ── Stats row (unchanged) ── */}
         <div
-          className={`grid grid-cols-2 lg:grid-cols-4 gap-6 mt-16 transition-all duration-700 delay-600 ${
+          className={`grid grid-cols-2 lg:grid-cols-4 gap-6 mt-12 transition-all duration-700 delay-400 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
@@ -373,6 +340,7 @@ export default function SectorPrism() {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
