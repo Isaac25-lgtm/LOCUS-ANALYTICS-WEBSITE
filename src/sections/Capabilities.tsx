@@ -1,18 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-  Heart,
-  GraduationCap,
-  Calculator,
-  Bell,
-  Database,
-  Brain,
-  ArrowRight,
-  Check,
-} from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 
 const capabilities = [
   {
-    icon: Heart,
+    image: '/cap-health.jpg',
     title: 'HMIS & Health Dashboards',
     description:
       'DHIS2 integrations, facility reporting, and program dashboards for the health sector.',
@@ -22,11 +13,10 @@ const capabilities = [
       'Program-specific reporting',
       'Automated data validation',
     ],
-    color: 'from-rose-500/20 to-rose-500/5',
-    iconColor: 'text-rose-400',
+    accentColor: '#e11d48',
   },
   {
-    icon: GraduationCap,
+    image: '/cap-education.jpg',
     title: 'Education Management',
     description:
       'Records, attendance, fees, and parent communication—unified for institutions.',
@@ -36,11 +26,10 @@ const capabilities = [
       'Fee management',
       'Parent portals',
     ],
-    color: 'from-blue-500/20 to-blue-500/5',
-    iconColor: 'text-blue-400',
+    accentColor: '#2F6BFF',
   },
   {
-    icon: Calculator,
+    image: '/cap-tax.jpg',
     title: 'Tax & Compliance Automation',
     description:
       'URA/EFRIS-ready flows, invoicing, and reconciliation for businesses.',
@@ -50,11 +39,10 @@ const capabilities = [
       'Electronic invoicing',
       'Audit trails',
     ],
-    color: 'from-emerald-500/20 to-emerald-500/5',
-    iconColor: 'text-emerald-400',
+    accentColor: '#059669',
   },
   {
-    icon: Bell,
+    image: '/cap-workflow.jpg',
     title: 'Workflow & Alerts',
     description:
       'Escalations, approvals, and notifications—rule-based and fast.',
@@ -64,11 +52,10 @@ const capabilities = [
       'SMS & email alerts',
       'Escalation rules',
     ],
-    color: 'from-amber-500/20 to-amber-500/5',
-    iconColor: 'text-amber-400',
+    accentColor: '#d97706',
   },
   {
-    icon: Database,
+    image: '/cap-data.jpg',
     title: 'Data Pipelines',
     description: 'Clean ingest, validation, and scheduled exports.',
     features: [
@@ -77,11 +64,10 @@ const capabilities = [
       'Scheduled exports',
       'API integrations',
     ],
-    color: 'from-purple-500/20 to-purple-500/5',
-    iconColor: 'text-purple-400',
+    accentColor: '#7c3aed',
   },
   {
-    icon: Brain,
+    image: '/cap-ai.jpg',
     title: 'AI Assistants',
     description:
       'LLM-powered search, document generation, and decision support.',
@@ -91,8 +77,7 @@ const capabilities = [
       'Predictive analytics',
       'Chatbot interfaces',
     ],
-    color: 'from-cyan-500/20 to-cyan-500/5',
-    iconColor: 'text-cyan-400',
+    accentColor: '#0891b2',
   },
 ];
 
@@ -180,11 +165,14 @@ export default function Capabilities() {
                 transitionDelay: `${index * 100}ms`,
               }}
             >
-              {/* Icon */}
-              <div
-                className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cap.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}
-              >
-                <cap.icon size={26} className={cap.iconColor} />
+              {/* Photo thumbnail */}
+              <div className="w-full h-40 rounded-2xl overflow-hidden mb-5 group-hover:scale-[1.02] transition-transform duration-300">
+                <img
+                  src={cap.image}
+                  alt={cap.title}
+                  className="w-full h-full object-cover"
+                  style={{ filter: 'brightness(0.92) saturate(1.05)' }}
+                />
               </div>
 
               {/* Content */}
@@ -206,7 +194,7 @@ export default function Capabilities() {
                     className="flex items-center gap-2 text-sm"
                     style={{ color: '#4B4F57' }}
                   >
-                    <Check size={14} style={{ color: '#2F6BFF' }} />
+                    <Check size={14} style={{ color: cap.accentColor }} />
                     {feature}
                   </li>
                 ))}
