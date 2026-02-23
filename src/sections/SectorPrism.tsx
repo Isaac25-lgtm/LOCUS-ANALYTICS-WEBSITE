@@ -344,7 +344,7 @@ export default function SectorPrism() {
   );
 }
 
-/* ── Animated count-up stat card ── */
+/* ── Animated count-up stat card — loops continuously ── */
 function CountStat({
   target,
   suffix,
@@ -357,26 +357,42 @@ function CountStat({
   run: boolean;
 }) {
   const [count, setCount] = useState(0);
-  const started = useRef(false);
+  const rafRef = useRef<number>(0);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!run || started.current) return;
-    started.current = true;
+    if (!run) return;
 
-    const duration = 900; // ms — fast but readable
-    const steps = 40;
-    const interval = duration / steps;
-    let step = 0;
+    const ROLL_DURATION = 700;  // ms to count 0 → target
+    const PAUSE_DURATION = 900; // ms to hold at target before reset
 
-    const timer = setInterval(() => {
-      step++;
-      // Ease-out: fast start, slows at the end
-      const progress = 1 - Math.pow(1 - step / steps, 3);
-      setCount(Math.round(progress * target));
-      if (step >= steps) clearInterval(timer);
-    }, interval);
+    let startTime: number | null = null;
 
-    return () => clearInterval(timer);
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+
+      if (elapsed < ROLL_DURATION) {
+        const progress = 1 - Math.pow(1 - elapsed / ROLL_DURATION, 3);
+        setCount(Math.round(progress * target));
+        rafRef.current = requestAnimationFrame(animate);
+      } else {
+        setCount(target);
+        // Pause, then restart cycle
+        timeoutRef.current = setTimeout(() => {
+          setCount(0);
+          startTime = null;
+          rafRef.current = requestAnimationFrame(animate);
+        }, PAUSE_DURATION);
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, [run, target]);
 
   return (
