@@ -166,12 +166,11 @@ export default function Capabilities() {
               }}
             >
               {/* Photo thumbnail */}
-              <div className="w-full h-40 rounded-2xl overflow-hidden mb-5 group-hover:scale-[1.02] transition-transform duration-300">
+              <div className="w-full h-48 rounded-2xl overflow-hidden mb-5">
                 <img
                   src={cap.image}
                   alt={cap.title}
-                  className="w-full h-full object-cover"
-                  style={{ filter: 'brightness(0.92) saturate(1.05)' }}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
 
