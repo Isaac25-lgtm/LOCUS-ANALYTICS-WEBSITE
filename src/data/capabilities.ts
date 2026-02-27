@@ -10,8 +10,6 @@ import {
   ShieldCheck,
   BarChart3,
   Users,
-  Building2,
-  School,
   Stethoscope,
   Calculator,
   Workflow,
