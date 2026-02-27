@@ -6,25 +6,25 @@
 
 @layer base {
   :root {
-    --background: 222 16% 4%;
-    --foreground: 210 20% 95%;
-    --card: 222 16% 7%;
-    --card-foreground: 210 20% 95%;
-    --popover: 222 16% 7%;
-    --popover-foreground: 210 20% 95%;
-    --primary: 222 90% 58%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 222 14% 11%;
-    --secondary-foreground: 210 20% 95%;
-    --muted: 222 12% 15%;
-    --muted-foreground: 215 10% 52%;
-    --accent: 222 90% 58%;
-    --accent-foreground: 210 20% 95%;
+    --background: 220 20% 97%;
+    --foreground: 222 16% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 16% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 16% 12%;
+    --primary: 222 90% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 16% 93%;
+    --secondary-foreground: 222 16% 12%;
+    --muted: 220 14% 92%;
+    --muted-foreground: 215 10% 44%;
+    --accent: 222 90% 55%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 222 12% 14%;
-    --input: 222 12% 14%;
-    --ring: 222 90% 58%;
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
+    --ring: 222 90% 55%;
     --radius: 0.625rem;
   }
 }
@@ -52,6 +52,12 @@
   }
 }
 
+/* Custom selection color */
+::selection {
+  background: hsl(222 90% 55% / 0.18);
+  color: hsl(222 16% 12%);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -69,28 +75,12 @@
 
 /* Grain overlay */
 .grain-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.03;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  display: none;
 }
 
 /* Vignette effect */
 .vignette {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  background: radial-gradient(ellipse at center, transparent 0%, transparent 60%, rgba(0,0,0,0.3) 100%);
+  display: none;
 }
 
 /* 3D Prism styles */
@@ -120,7 +110,7 @@
 .card-hover:hover {
   transform: translateY(-2px);
   border-color: hsl(var(--border));
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
 /* ==============================
@@ -128,32 +118,34 @@
    ============================== */
 .btn-primary {
   @apply px-5 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium text-[14px] transition-all duration-200;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 .btn-primary:hover {
   filter: brightness(1.08);
-  box-shadow: 0 2px 8px rgba(47, 100, 230, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(47, 100, 230, 0.35);
+  transform: translateY(-2px) scale(1.02);
 }
 .btn-primary:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
   filter: brightness(0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .btn-secondary {
-  @apply px-5 py-2.5 bg-transparent text-foreground/90 rounded-lg font-medium text-[14px] border border-border/60 transition-all duration-200;
+  @apply px-5 py-2.5 bg-white text-foreground/90 rounded-lg font-medium text-[14px] border border-border transition-all duration-200;
 }
 .btn-secondary:hover {
-  @apply border-foreground/20 bg-secondary/50;
-  transform: translateY(-1px);
+  @apply border-primary/30 bg-primary/5;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 .btn-secondary:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
 }
 
-/* Text gradient — refined, less harsh */
+/* Text gradient */
 .text-gradient {
-  background: linear-gradient(135deg, hsl(215 80% 72%) 0%, hsl(222 90% 62%) 50%, hsl(230 80% 68%) 100%);
+  background: linear-gradient(135deg, hsl(222 90% 52%) 0%, hsl(222 90% 45%) 50%, hsl(230 80% 50%) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -228,7 +220,56 @@
 
 /* Form styles */
 input, textarea {
-  @apply bg-secondary border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all;
+  @apply bg-white border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all duration-200;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+input:hover, textarea:hover {
+  border-color: hsl(220 13% 80%);
+}
+
+/* Gradient border shimmer on hover */
+@keyframes shimmer-slide {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.card-shimmer {
+  position: relative;
+}
+.card-shimmer::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(90deg, transparent 0%, transparent 30%, hsl(222 90% 55% / 0.5) 50%, transparent 70%, transparent 100%);
+  background-size: 200% 100%;
+  background-position: 200% center;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.card-shimmer:hover::before {
+  opacity: 1;
+  animation: shimmer-slide 2s ease-in-out infinite;
+}
+
+/* Section gradient divider */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, hsl(222 90% 55% / 0.15) 30%, hsl(222 90% 55% / 0.15) 70%, transparent 100%);
+}
+
+/* Page transitions */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-enter 0.4s ease-out forwards;
 }
 
 /* ==============================

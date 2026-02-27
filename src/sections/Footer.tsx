@@ -37,7 +37,7 @@ export default function Footer() {
 
   return (
     <footer className="relative w-full border-t border-border/30 bg-background">
-      <div className="w-full px-6 lg:px-12 xl:px-20 py-16">
+      <div className="w-full px-6 lg:px-12 xl:px-20 py-10">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-4 lg:col-span-2">
@@ -124,7 +124,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-16 pt-8 border-t border-border/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-10 pt-6 border-t border-border/30 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Locus Analytics. All rights reserved.
           </div>

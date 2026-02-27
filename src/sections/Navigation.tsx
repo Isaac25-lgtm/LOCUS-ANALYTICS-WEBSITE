@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
 interface NavigationProps {
@@ -14,11 +15,17 @@ const navLinks = [
 
 export default function Navigation({ scrolled }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (location.pathname !== '/') {
+      navigate('/' + href);
+    } else {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
     setMobileMenuOpen(false);
   };
@@ -32,27 +39,31 @@ export default function Navigation({ scrolled }: NavigationProps) {
             : 'bg-transparent'
         }`}
         style={{
-          borderBottom: scrolled ? '1px solid hsl(222 12% 13%)' : '1px solid transparent',
+          borderBottom: scrolled ? '1px solid hsl(220 13% 88%)' : '1px solid transparent',
         }}
       >
         <div className="w-full px-6 lg:px-12">
           <div className="flex items-center justify-between h-14 lg:h-16">
             {/* Logo */}
             <a
-              href="#"
+              href="/"
               className="flex items-center gap-2.5"
               onClick={(e) => {
                 e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (location.pathname !== '/') {
+                  navigate('/');
+                } else {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
             >
               <img
                 src="/logo.png"
                 alt="Locus Analytics logo"
-                className="h-7 w-auto"
+                className="h-10 w-auto"
               />
               <span
-                className="font-sans text-[15px] font-semibold text-foreground/90 tracking-[-0.01em]"
+                className="font-sans text-[18px] font-semibold text-foreground tracking-[-0.01em]"
               >
                 Locus Analytics
               </span>
@@ -71,7 +82,11 @@ export default function Navigation({ scrolled }: NavigationProps) {
               ))}
               <button
                 onClick={() => scrollToSection('#contact')}
-                className="btn-primary text-[13px] px-4 py-2"
+                className={`btn-primary text-[13px] px-4 py-2 transition-all duration-300 ${
+                  scrolled
+                    ? 'opacity-100 translate-y-0 scale-100'
+                    : 'opacity-0 translate-y-1 scale-95 pointer-events-none'
+                }`}
               >
                 Request a demo
               </button>

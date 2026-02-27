@@ -126,7 +126,7 @@ export default function Contact() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative min-h-screen w-full flex items-center py-20"
+      className="relative w-full py-10 lg:py-12"
     >
       {/* Background */}
       <div
@@ -137,7 +137,7 @@ export default function Contact() {
       />
 
       <div className="w-full px-6 lg:px-12 xl:px-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left content */}
           <div
             className={`max-w-xl transition-all duration-700 ${
@@ -148,14 +148,14 @@ export default function Contact() {
               Get in Touch
             </div>
 
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1] tracking-tight mb-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-[1.1] tracking-tight mb-4">
               Let's
               <br />
               <span className="text-gradient">build.</span>
             </h2>
 
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              From prototype to production—fast, compliant, and built to last.
+              From prototype to production, fast, compliant, and built to last.
               Tell us what you're building and we'll get back within 2 business days.
             </p>
 
@@ -226,7 +226,7 @@ export default function Contact() {
                 {submitState === 'success' ? (
                   <div className="text-center py-12">
                     <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle size={32} className="text-emerald-400" />
+                      <CheckCircle size={32} className="text-emerald-600" />
                     </div>
                     <h3 className="text-2xl font-semibold text-foreground mb-2">
                       Message sent!

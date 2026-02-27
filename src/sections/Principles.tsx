@@ -77,7 +77,7 @@ export default function Principles() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen w-full flex items-center py-20"
+      className="relative w-full py-10 lg:py-12"
     >
       {/* Background */}
       <div
@@ -88,7 +88,7 @@ export default function Principles() {
       />
 
       <div className="w-full px-6 lg:px-12 xl:px-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left content */}
           <div
             className={`max-w-xl transition-all duration-700 ${
@@ -101,7 +101,7 @@ export default function Principles() {
             </div>
 
             {/* Headline */}
-            <h2 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1] tracking-tight mb-6">
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-[1.1] tracking-tight mb-4">
               Built to
               <br />
               <span className="text-gradient">run</span>
@@ -109,7 +109,7 @@ export default function Principles() {
 
             {/* Description */}
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              Secure, observable, and easy to operate—so teams stay focused on 
+              Secure, observable, and easy to operate so teams stay focused on 
               outcomes, not infrastructure. We build systems that work reliably 
               in real-world conditions.
             </p>

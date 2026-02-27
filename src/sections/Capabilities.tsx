@@ -1,85 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
-
-const capabilities = [
-  {
-    image: '/cap-health.jpg',
-    title: 'HMIS & Health Dashboards',
-    description:
-      'DHIS2 integrations, facility reporting, and program dashboards for the health sector.',
-    features: [
-      'DHIS2 API integration',
-      'Real-time HMIS dashboards',
-      'Program-specific reporting',
-      'Automated data validation',
-    ],
-    accentColor: '#e11d48',
-  },
-  {
-    image: '/cap-education.jpg',
-    title: 'Education Management',
-    description:
-      'Records, attendance, fees, and parent communication—unified for institutions.',
-    features: [
-      'Student information systems',
-      'Attendance tracking',
-      'Fee management',
-      'Parent portals',
-    ],
-    accentColor: '#2F6BFF',
-  },
-  {
-    image: '/cap-tax.jpg',
-    title: 'Tax & Compliance Automation',
-    description:
-      'URA/EFRIS-ready flows, invoicing, and reconciliation for businesses.',
-    features: [
-      'URA tax automation',
-      'EFRIS integration',
-      'Electronic invoicing',
-      'Audit trails',
-    ],
-    accentColor: '#059669',
-  },
-  {
-    image: '/cap-workflow.jpg',
-    title: 'Workflow & Alerts',
-    description:
-      'Escalations, approvals, and notifications—rule-based and fast.',
-    features: [
-      'Custom workflow builder',
-      'Multi-level approvals',
-      'SMS & email alerts',
-      'Escalation rules',
-    ],
-    accentColor: '#d97706',
-  },
-  {
-    image: '/cap-data.jpg',
-    title: 'Data Pipelines',
-    description: 'Clean ingest, validation, and scheduled exports.',
-    features: [
-      'ETL processes',
-      'Data quality checks',
-      'Scheduled exports',
-      'API integrations',
-    ],
-    accentColor: '#7c3aed',
-  },
-  {
-    image: '/cap-ai.jpg',
-    title: 'AI Assistants',
-    description:
-      'LLM-powered search, document generation, and decision support.',
-    features: [
-      'Claude API integration',
-      'Smart document generation',
-      'Predictive analytics',
-      'Chatbot interfaces',
-    ],
-    accentColor: '#0891b2',
-  },
-];
+import { capabilities } from '../data/capabilities';
 
 const techStack = [
   { name: 'Python', category: 'Backend' },
@@ -122,7 +44,7 @@ export default function Capabilities() {
     <section
       id="capabilities"
       ref={sectionRef}
-      className="relative w-full py-24 lg:py-32"
+      className="relative w-full py-10 lg:py-12"
       style={{
         background: '#F4F6F8',
       }}
@@ -130,7 +52,7 @@ export default function Capabilities() {
       <div className="w-full px-6 lg:px-12 xl:px-20">
         {/* Section header */}
         <div
-          className={`max-w-2xl mb-16 transition-all duration-700 ${
+          className={`max-w-2xl mb-8 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
@@ -141,23 +63,23 @@ export default function Capabilities() {
             What We Build
           </div>
           <h2
-            className="font-sans text-4xl sm:text-5xl lg:text-6xl font-bold mb-6"
+            className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold mb-4"
             style={{ color: '#0B0C10' }}
           >
             Capabilities
           </h2>
           <p className="text-lg" style={{ color: '#4B4F57' }}>
-            We design, build, and operate systems—then help teams use them.
+            We design, build, and operate systems then help teams use them.
             From prototype to production, fast and compliant.
           </p>
         </div>
 
         {/* Capabilities grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
           {capabilities.map((cap, index) => (
             <div
               key={cap.title}
-              className={`group relative bg-white rounded-3xl p-6 border transition-all duration-500 hover:shadow-card-light hover:-translate-y-1 ${
+              className={`card-shimmer group relative bg-white rounded-3xl p-6 border transition-all duration-500 hover:shadow-card-light hover:-translate-y-1 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
               style={{
@@ -200,7 +122,8 @@ export default function Capabilities() {
               </ul>
 
               {/* Link */}
-              <button
+              <Link
+                to={`/capabilities/${cap.slug}`}
                 className="inline-flex items-center gap-2 text-sm font-medium transition-colors group/link"
                 style={{ color: '#2F6BFF' }}
               >
@@ -209,7 +132,7 @@ export default function Capabilities() {
                   size={14}
                   className="transition-transform group-hover/link:translate-x-1"
                 />
-              </button>
+              </Link>
             </div>
           ))}
         </div>

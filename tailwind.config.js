@@ -62,7 +62,7 @@ module.exports = {
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        'card': '0 24px 70px rgba(0, 0, 0, 0.35)',
+        'card': '0 24px 70px rgba(0, 0, 0, 0.08)',
         'card-light': '0 24px 70px rgba(0, 0, 0, 0.1)',
         'glow': '0 0 40px rgba(47, 107, 255, 0.15)',
         'glow-strong': '0 0 60px rgba(47, 107, 255, 0.3)',

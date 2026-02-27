@@ -9,7 +9,7 @@ const sectors = [
     title: 'Healthcare',
     headline: 'Healthcare',
     description:
-      'HMIS dashboards, DHIS2 integrations, and AI-assisted reporting—built for real-world clinics and hospitals.',
+      'HMIS dashboards, DHIS2 integrations, and AI-assisted reporting, built for real-world clinics and hospitals.',
     cta: 'Explore health systems',
     image: '/healthcare.jpg',
     icon: Heart,
@@ -28,7 +28,7 @@ const sectors = [
     title: 'Education',
     headline: 'Education',
     description:
-      'Records, fees, attendance, and analytics—unified for schools and universities.',
+      'Records, fees, attendance, and analytics, unified for schools and universities.',
     cta: 'Explore education systems',
     image: '/education.jpg',
     icon: GraduationCap,
@@ -47,7 +47,7 @@ const sectors = [
     title: 'Business',
     headline: 'Business automation',
     description:
-      'Tax, inventory, POS, and compliance—connected to your ledger and your workflow.',
+      'Tax, inventory, POS, and compliance, connected to your ledger and your workflow.',
     cta: 'Explore business tools',
     image: '/business.jpg',
     icon: Briefcase,
@@ -66,7 +66,7 @@ const sectors = [
     title: 'Data & AI',
     headline: 'Data & AI',
     description:
-      'Dashboards, forecasting, and LLM-powered assistants—trained on your data, not the internet.',
+      'Dashboards, forecasting, and LLM-powered assistants, trained on your data, not the internet.',
     cta: 'Explore AI & analytics',
     image: '/data-ai.jpg',
     icon: Brain,
@@ -148,7 +148,7 @@ export default function SectorPrism() {
     <section
       id="sectors"
       ref={sectionRef}
-      className="relative w-full py-20"
+      className="relative w-full py-10 lg:py-12"
     >
       {/* Background */}
       <div
@@ -162,14 +162,14 @@ export default function SectorPrism() {
 
         {/* ── Section header (UNCHANGED) ── */}
         <div
-          className={`text-center max-w-2xl mx-auto mb-12 transition-all duration-700 ${
+          className={`text-center max-w-2xl mx-auto mb-6 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
           <div className="mono text-xs uppercase tracking-[0.15em] text-primary mb-4">
             Sectors We Serve
           </div>
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold text-foreground mb-4">
+          <h2 className="font-sans text-3xl sm:text-4xl font-bold text-foreground mb-3">
             Built for every industry
           </h2>
           <p className="text-muted-foreground">
@@ -189,9 +189,9 @@ export default function SectorPrism() {
           <div
             className="relative w-full overflow-hidden rounded-2xl"
             style={{
-              height: 'clamp(420px, 56vh, 620px)',
-              border: '1px solid rgba(255,255,255,0.07)',
-              boxShadow: '0 1px 0 0 rgba(255,255,255,0.05) inset, 0 32px 64px -16px rgba(0,0,0,0.5)',
+              height: 'clamp(280px, 36vh, 400px)',
+              border: '1px solid hsl(220 13% 88%)',
+              boxShadow: '0 20px 60px -15px rgba(0,0,0,0.12)',
             }}
           >
             {/* All sector images stacked — only active fades in */}
@@ -207,7 +207,7 @@ export default function SectorPrism() {
                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                   idx === displayIndex && !isTransitioning ? 'opacity-100' : 'opacity-0'
                 }`}
-                style={{ filter: 'brightness(0.72) saturate(0.88)' }}
+                style={{ filter: 'brightness(0.85) saturate(0.95)' }}
               />
             ))}
 
@@ -215,14 +215,8 @@ export default function SectorPrism() {
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: 'linear-gradient(to top, rgba(10,12,22,0.92) 0%, rgba(10,12,22,0.55) 35%, transparent 65%)',
+                background: 'linear-gradient(to top, rgba(10,12,22,0.88) 0%, rgba(10,12,22,0.50) 35%, transparent 65%)',
               }}
-            />
-
-            {/* Left edge blend */}
-            <div
-              className="absolute inset-y-0 left-0 w-12 pointer-events-none"
-              style={{ background: 'linear-gradient(to right, rgba(10,12,22,0.3) 0%, transparent 100%)' }}
             />
 
             {/* Overlay content — fades on transition */}
@@ -247,12 +241,12 @@ export default function SectorPrism() {
               {/* Description + features + CTA in a two-column row on desktop */}
               <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-12">
                 <div className="flex-1 max-w-lg">
-                  <p className="text-[14px] leading-relaxed mb-4" style={{ color: 'hsl(215 10% 60%)' }}>
+                  <p className="text-[14px] leading-relaxed mb-4" style={{ color: 'hsl(215 10% 75%)' }}>
                     {displayedSector.description}
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1.5">
                     {displayedSector.features.map((feature, i) => (
-                      <div key={i} className="flex items-center gap-1.5 text-[12px]" style={{ color: 'hsl(215 10% 55%)' }}>
+                      <div key={i} className="flex items-center gap-1.5 text-[12px]" style={{ color: 'hsl(215 10% 72%)' }}>
                         <div className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: 'hsl(222 70% 60%)' }} />
                         {feature}
                       </div>
@@ -319,7 +313,7 @@ export default function SectorPrism() {
 
         {/* ── Stats row — animated count-up ── */}
         <div
-          className={`grid grid-cols-2 lg:grid-cols-4 gap-6 mt-12 transition-all duration-700 delay-400 ${
+          className={`grid grid-cols-2 lg:grid-cols-4 gap-3 mt-6 transition-all duration-700 delay-400 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
@@ -358,13 +352,12 @@ function CountStat({
 }) {
   const [count, setCount] = useState(0);
   const rafRef = useRef<number>(0);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const doneRef = useRef(false);
 
   useEffect(() => {
-    if (!run) return;
+    if (!run || doneRef.current) return;
 
-    const ROLL_DURATION = 700;  // ms to count 0 → target
-    const PAUSE_DURATION = 900; // ms to hold at target before reset
+    const ROLL_DURATION = 700;
 
     let startTime: number | null = null;
 
@@ -378,12 +371,7 @@ function CountStat({
         rafRef.current = requestAnimationFrame(animate);
       } else {
         setCount(target);
-        // Pause, then restart cycle
-        timeoutRef.current = setTimeout(() => {
-          setCount(0);
-          startTime = null;
-          rafRef.current = requestAnimationFrame(animate);
-        }, PAUSE_DURATION);
+        doneRef.current = true;
       }
     };
 
@@ -391,14 +379,14 @@ function CountStat({
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, [run, target]);
 
   return (
     <div className="text-center p-6 rounded-2xl bg-card/50 border border-border/30">
-      <div className="font-sans text-3xl lg:text-4xl font-bold text-foreground mb-1 tabular-nums">
-        {count}{suffix}
+      <div className="font-mono text-3xl lg:text-4xl font-bold mb-1 tabular-nums tracking-tight">
+        <span className="text-foreground">{count}</span>
+        <span className="text-primary">{suffix}</span>
       </div>
       <div className="text-sm text-muted-foreground">{label}</div>
     </div>

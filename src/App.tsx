@@ -1,15 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Navigation from './sections/Navigation';
 import Hero from './sections/Hero';
+import ClientLogos from './sections/ClientLogos';
 import IntelligentSystems from './sections/IntelligentSystems';
 import SectorPrism from './sections/SectorPrism';
 import Capabilities from './sections/Capabilities';
+import Process from './sections/Process';
+import CaseStudies from './sections/CaseStudies';
+import Testimonial from './sections/Testimonial';
 import Principles from './sections/Principles';
 import Contact from './sections/Contact';
 import Footer from './sections/Footer';
+import CapabilityDetail from './pages/CapabilityDetail';
 import { initAnalytics } from './lib/analytics';
 
-function App() {
+function HomePage() {
   const [scrolled, setScrolled] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -49,6 +55,19 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
+  // Handle hash-based scrolling (for links like /#contact from detail pages)
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  }, []);
+
   return (
     <div ref={mainRef} className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Grain overlay */}
@@ -63,10 +82,21 @@ function App() {
       {/* Main content */}
       <main className="relative z-10">
         <Hero />
-        <IntelligentSystems />
-        <SectorPrism />
+        <ClientLogos />
+        <div className="section-divider" />
         <Capabilities />
+        <div className="section-divider" />
+        <IntelligentSystems />
+        <div className="section-divider" />
+        <SectorPrism />
+        <div className="section-divider" />
+        <Process />
+        <div className="section-divider" />
+        <CaseStudies />
+        <Testimonial />
+        <div className="section-divider" />
         <Principles />
+        <div className="section-divider" />
         <Contact />
       </main>
 
@@ -90,6 +120,15 @@ function App() {
         </svg>
       </a>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/capabilities/:slug" element={<CapabilityDetail />} />
+    </Routes>
   );
 }
 
