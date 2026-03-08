@@ -7,7 +7,6 @@ import {
   type ContactFormValues,
   SECTOR_OPTIONS,
 } from "@/lib/validators";
-import { submitContactForm } from "@/app/contact/action";
 
 type FormType = "general" | "demo" | "engineer";
 
@@ -82,14 +81,19 @@ export function ContactForm({ type = "general" }: ContactFormProps) {
     }
 
     try {
-      const response = await submitContactForm(result.data, type);
-      if (response.success) {
-        setStatus("success");
-        setServerMessage(response.message);
-      } else {
-        setStatus("error");
-        setServerMessage(response.message);
-      }
+      // Build mailto link as a fallback for static sites
+      const subject = encodeURIComponent(
+        `[${TYPE_LABELS[type]}] from ${result.data.name} - ${result.data.organization}`
+      );
+      const body = encodeURIComponent(
+        `Name: ${result.data.name}\nEmail: ${result.data.email}\nOrganization: ${result.data.organization}\nPhone: ${result.data.phone || "Not provided"}\nSector: ${result.data.sector}\n\nMessage:\n${result.data.message}`
+      );
+      window.location.href = `mailto:info@locusanalytics.co?subject=${subject}&body=${body}`;
+
+      setStatus("success");
+      setServerMessage(
+        "Your email client has been opened with the message. If it didn't open, please email us directly at info@locusanalytics.co"
+      );
     } catch {
       setStatus("error");
       setServerMessage("An unexpected error occurred. Please try again.");
